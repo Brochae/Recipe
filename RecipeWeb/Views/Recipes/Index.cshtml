@@ -1,0 +1,68 @@
+﻿@model IEnumerable<RecipeBizObjects.bizRecipe>
+
+@{
+    ViewData["Title"] = "Recipe List";
+}
+<h1>All Recipes</h1>
+
+<p>
+    @Html.ActionLink("Create New", "Edit", new {id=""}, new{Class = "btn btn-primary"})
+@*    <a asp-action="">Create New</a>*@
+</p>
+<div class="table-responsive">
+    <table class="table overflow-visible">
+        <thead>
+            <tr>
+                <th>
+                    Picture
+                </th>
+                <th class="col-auto">
+                    @Html.DisplayNameFor(model => model.RecipeName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserFullName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CalorieCount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TotalIngredients)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TotalSteps)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <img src="/images/@(item.RecipeCode).png" class="rounded imgicon" width="200" height="200">
+                    </td>
+                    <td >
+                       @Html.ActionLink(item.RecipeName,"RecipeDetails", new{id=item.RecipeCode})
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserFullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CalorieCount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalIngredients)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalSteps)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new {id=item.RecipeCode}) |
+                        @Html.ActionLink("Details", "RecipeDetails", new{id=item.RecipeCode}) |
+                        @Html.ActionLink("Delete", "Delete", new {id=item.RecipeCode})
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

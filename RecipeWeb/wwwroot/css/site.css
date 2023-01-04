@@ -1,0 +1,40 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+.imgicon{
+    object-fit: cover;
+    width: 100px;
+    height: 100px;
+}
+.imgfull {
+    object-fit: cover;
+    width: 250px;
+    height: 325px;
+}
+.homecenter{
+    margin:0;
+    position:absolute;
+    top:50%;
+    left:50%;
+    margin-right:-50%;
+    transform: translate(-50%, -50%);
+}
+.fixedcol{
+    min-width:275px;
+    min-height:325px;
+}

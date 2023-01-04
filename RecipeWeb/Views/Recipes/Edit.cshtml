@@ -1,0 +1,87 @@
+﻿@model RecipeBizObjects.bizRecipe
+
+@{
+    ViewData["Title"] = "Edit";
+    string errormsg = ViewBag.ErrorMessage;
+
+    SelectList lstusers = new(Model.UsersList(), "UserId", "UserFullName");
+    SelectList lstcuisine = new(Model.CuisineList(), "CuisineId", "CuisineName");
+
+}
+
+@if (string.IsNullOrEmpty(errormsg) == false)
+{
+    <h3 class="text-danger">@errormsg</h3>
+}
+else
+{
+    <h1>@Model.RecipeName <span class="h5">| Edit</span></h1>
+}
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="RecipeId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="RecipeName" class="control-label"></label>
+                <input asp-for="RecipeName" class="form-control" />
+                <span asp-validation-for="RecipeName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedByUserId" class="control-label"></label>
+<select asp-for="CreatedByUserId" asp-items=lstusers class="form-control">
+    <option value="">Click to select a user</option>
+
+</select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CuisineId" class="control-label"></label>
+                <select asp-for="CuisineId" asp-items=lstcuisine class="form-control">
+                 <option value="">Click to select a cuisine</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CalorieCount" class="control-label"></label>
+                <input asp-for="CalorieCount" class="form-control" />
+                <span asp-validation-for="CalorieCount" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="TotalIngredients" />
+            <input type="hidden" asp-for="TotalSteps" />
+            <div class="form-group">
+                <label asp-for="DateDrafted" asp-format="{0:yyyy-MM-dd}" class="control-label"></label>
+                <input asp-for="DateDrafted" class="form-control" />
+                <span asp-validation-for="DateDrafted" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DatePublished" asp-format="{0:yyyy-MM-dd}" class="control-label"></label>
+                <input asp-for="DatePublished" class="form-control" />
+                <span asp-validation-for="DatePublished" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateArchived" asp-format="{0:yyyy-MM-dd}" class="control-label"></label>
+                <input asp-for="DateArchived" class="form-control" />
+                <span asp-validation-for="DateArchived" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="RecipeStatus" />
+            <input type="hidden" asp-for="RecipeCode" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary mt-3 mb-2" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a> | 
+    @if (string.IsNullOrEmpty(errormsg) == true)
+    {
+         <a href="/Recipes/RecipeDetails/@Model.RecipeCode">Back to @Model.RecipeName</a>
+    }
+ 
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

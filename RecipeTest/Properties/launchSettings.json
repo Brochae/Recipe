@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "RecipeTest": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:12767;http://localhost:12772"
+    }
+  }
+}

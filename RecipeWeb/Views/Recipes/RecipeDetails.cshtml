@@ -1,0 +1,59 @@
+﻿@using RecipeBizObjects
+@using System.Data
+@model bizRecipe
+
+@{
+    ViewData["Title"] = @Model.RecipeName;
+}
+
+<h1>
+    @Model.RecipeName
+    <span class="text-muted h6">
+        <span class="px-2">Cuisine: @Model.CuisineName </span>
+        <span class="px-2">Calories: @Model.CalorieCount </span>
+        <span class="px-2"> Ingredients: @Model.TotalIngredients </span>
+        <span class="px-2"> Steps: @Model.TotalSteps </span>
+        <span class="px-2">Status: @Model.RecipeStatus</span>
+    </span>
+</h1>
+<div>
+    <h4>
+        Created By: @Model.UserFullName
+        <span class="text-muted h6">
+            <span class="px-2">Date Drafted: @Html.DisplayFor(m => m.DateDrafted)</span>
+            <span class="px-2">Date Published: @Html.DisplayFor(m => m.DatePublished) </span>
+            <span class="px-2">Date Archived: @Html.DisplayFor(m => m.DateArchived) </span>
+        </span>
+    </h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-3 fixedcol">
+            <img src="/images/@(Model.RecipeCode).png" class="rounded imgfull" width="300" height="400">
+        </div>
+        <div class="col-md-3">
+            <h3>Ingredients:</h3>
+            <ul>
+                @foreach (bizRecipeIngredients ri in Model.IngredientsList(true))
+                {
+                    <li>@ri.Ingredients</li>
+                }
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h3>Instructions:</h3>
+            <ol>
+                @foreach (bizRecipeSteps rs in Model.StepsList(true))
+                {
+                    <li>@rs.StepDesc</li>
+                }
+            </ol>
+        </div>
+    </div>
+    <div>
+        @Html.ActionLink("Edit", "Edit", new {id=Model.RecipeCode}) |
+        @Html.ActionLink("Delete", "Delete", new {id=Model.RecipeCode}) | 
+        <a asp-action="Index">Back to List</a>
+    </div>
+
+</div>
+

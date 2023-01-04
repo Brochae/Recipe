@@ -1,0 +1,136 @@
+﻿<div class="row">
+    <div class="col-md-12">
+        <h1 class="display-1">Recipes</h1>
+    </div>
+</div>
+<hr />
+<div class="row">
+<div class="col-md-12">
+    <button class="btn btn-success" onclick="RefreshList()">Refresh List</button>
+    <button class="btn btn-primary" onclick="ShowAll()">Select All</button>
+    <button class="btn btn-danger" onclick="HideAll()">Unselect All</button>
+</div>
+</div>
+<hr />
+
+<div class="row">
+    <div class="col-md-5">
+        <table class="table" id="tblRecipes" style="table-layout:fixed">
+
+        </table>
+    </div>
+    <div class="col-md-7">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row" id="dvPeek" onclick="ClearPeek()">
+
+                </div>
+            </div>
+        </div>
+        <div class="row"><h1>Selected Menu Items:</h1></div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row" id="dvMenu">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const tblRecipes = document.getElementById("tblRecipes");
+    const dvPeek = document.getElementById("dvPeek");
+    const dvMenu = document.getElementById("dvMenu");
+    let recipeArray = [];
+
+    RefreshList();
+    
+    function ShowRecipeList(json_array) {
+        recipeArray = json_array;
+        json_array.forEach(r => CreateRecipeRow(r));
+    }
+    
+    function CreateRecipeRow(recipe) {
+        const tr = document.createElement("tr");
+    
+        let td = document.createElement("td");
+        td.innerHTML = `<a href ="/Recipes/RecipeDetails/${recipe.recipeCode}">${recipe.recipeName}</a>`;
+        tr.appendChild(td);
+    
+        td = document.createElement("td");
+        td.innerHTML = GetPeekButton(recipe, true);
+        td.classList.add("btn","btn-primary");
+        tr.appendChild(td);
+
+        td = document.createElement("td");
+        td.innerHTML = GetPeekButton(recipe, false);
+        td.classList.add("btn","btn-secondary");
+        tr.appendChild(td);
+    
+        tblRecipes.appendChild(tr);
+    }
+    
+    function CreateRecipeCard(recipe, peek) {
+        const dv = peek ? dvPeek : dvMenu;
+        let card = `
+            <div id="${peek ? "" : GetCardId(recipe.recipeCode)}" class="col-md-4">
+            <div class="card">
+                        ${peek ? "" : `<div class="card-header d-flex justify-content-end pe-1"><button onclick=HideCard('${recipe.recipeCode}') class="btn btn-danger">X</button></div>`}
+                <img class="card-img-top rounded imgfull" width="300" height="400" src="/images/${recipe.recipeCode}.png" alt="Recipe Image">
+                <div class="card-body">
+                    <h4 class="card-title">${recipe.recipeName}</h4>
+                    <p class="card-text">Created By: ${recipe.userFullName}</p>
+                    <a href ="/Recipes/RecipeDetails/${recipe.recipeCode}" class="btn btn-primary">Recipe Details</a>
+                </div>
+            </div>
+        </div>
+        `
+        if (peek) {
+            dv.innerHTML = card;
+        }
+        else {
+            if (document.getElementById(GetCardId(recipe.recipeCode)) != null){
+                HideCard(recipe.recipeCode);
+            }
+            dv.innerHTML = card + dv.innerHTML;
+        }
+    }
+
+    function GetPeekButton(recipe, peek) {
+        return `<button class="btn ${peek ? 'btn-primary' : 'btn-secondary'}" onclick="PeekRecipe('${recipe.recipeCode}', ${peek})">${peek ? "Quick View" : "Add to Menu"}</button>`;
+    }
+    
+    function PeekRecipe(recipeCode, peek) {
+        const recipe = recipeArray.find(r => r.recipeCode == recipeCode);
+        CreateRecipeCard(recipe, peek);
+    }
+
+    function HideCard(recipeCode) {
+        const card = document.getElementById(GetCardId(recipeCode));
+        dvMenu.removeChild(card);
+    }
+
+    function RefreshList() {
+        fetch("/Recipes/APIRecipeList")
+            .then(resp => resp.json())
+            .then(json_array => ShowRecipeList(json_array));
+    }
+
+    function ShowAll() {
+        recipeArray.forEach(r => PeekRecipe(r.recipeCode, false));
+    }
+
+    function HideAll() {
+        ClearPeek();
+        recipeArray.forEach(r => { if (document.getElementById(GetCardId(r.recipeCode)) != null) { HideCard(r.recipeCode, false) } });
+    }
+
+    function ClearPeek() {
+        dvPeek.replaceChildren();
+    }
+    function GetCardId(recipeCode) {
+        return "card-" + recipeCode;
+    }
+</script>
